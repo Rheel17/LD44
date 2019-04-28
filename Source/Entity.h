@@ -21,13 +21,14 @@ public:
 	void Initialize(std::shared_ptr<b2World> world);
 
 	void Update(float dt, Level& level);
-	virtual void Render(const glm::ivec2& screenDimensions) const = 0;
+	virtual void Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const = 0;
 
-	virtual void OnCollisionStart(Entity *other) {}
-	virtual void OnCollisionEnd(Entity *other) {}
+	virtual void OnCollisionStart(Entity *other, b2Contact *contact) {}
+	virtual void OnCollisionEnd(Entity *other, b2Contact *contact) {}
 
-	float X();
-	float Y();
+	float& X();
+	float& Y();
+	const b2Body *Body();
 
 	void Die();
 	bool IsAlive();
@@ -38,6 +39,7 @@ protected:
 	float _rotation;
 	float _alive = true;
 
+	std::vector<std::function<void(Entity&, Level&)>> _on_update;
 	std::shared_ptr<b2Body> _b2_body;
 
 	virtual void InternalUpdate(float dt, Level& level) {}

@@ -6,7 +6,9 @@
 #define PLAYER_H_
 
 #include <set>
+#include <functional>
 
+#include "Bullet.h"
 #include "Wall.h"
 
 class Player : public Entity {
@@ -16,10 +18,10 @@ public:
 	Player(float x, float y);
 	~Player() = default;
 
-	void Render(const glm::ivec2& screenDimensions) const;
+	void Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const;
 
-	void OnCollisionStart(Entity *other);
-	void OnCollisionEnd(Entity *other);
+	void OnCollisionStart(Entity *other, b2Contact *contact);
+	void OnCollisionEnd(Entity *other, b2Contact *contact);
 	bool IsGrouded() const;
 
 protected:
@@ -35,7 +37,8 @@ private:
 	mutable bool _is_renderer_prepared = false;
 
 	std::set<Wall *> _touching_walls;
-	unsigned _bullets = 0;
+	std::shared_ptr<Bullet> _display_bullet;
+	unsigned _bullet_count = 0;
 
 };
 

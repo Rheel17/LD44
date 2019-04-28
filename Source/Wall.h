@@ -17,7 +17,7 @@ public:
 	Wall(unsigned x, unsigned y);
 	virtual ~Wall() = default;
 
-	virtual void Render(const glm::ivec2& screenDimensions) const;
+	virtual void Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const;
 
 protected:
 	b2BodyDef _CreateBody() const;

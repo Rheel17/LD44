@@ -30,11 +30,12 @@ Window::Window(EventListener *eventListener) :
 
 	// get the native resolution
 	const GLFWvidmode *vidmode = glfwGetVideoMode(primaryMonitor);
-	_width = vidmode->width * 0.75;
-	_height = vidmode->height * 0.75;;
+	_width = vidmode->width * 0.75f;
+	_height = vidmode->height * 0.75f;
 
 	// set the window hints
-	glfwWindowHint(GLFW_SAMPLES, 4);
+	glfwWindowHint(GLFW_SAMPLES, 9);
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	// create the window
 	GLFWwindow *window = glfwCreateWindow(_width, _height, "Ludum Dare 44", nullptr, nullptr);
@@ -42,11 +43,10 @@ Window::Window(EventListener *eventListener) :
 		throw showerror("Could not create window.");
 	}
 
-	std::clog << "glfwCreateWindow()" << std::endl;
+	glfwSetWindowPos(window, (int) (vidmode->width * 0.125f), (int) (vidmode->height * 0.125));
 
 	// initialize the handle
 	_window_handle = std::shared_ptr<void>(window, [](void *ptr) {
-		std::clog << "glfwDestroyWindow()" << std::endl;
 		glfwDestroyWindow(getWindow(ptr));
 	});
 
@@ -69,13 +69,16 @@ Window::Window(EventListener *eventListener) :
 
 	// initialize OpenGL
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(1);
 
 	int error;
 	if ((error = glewInit()) != GLEW_OK) {
 		throw showerror("Failed to initialize GLEW: " + std::to_string(error));
 	}
 
-	glDisable(GL_DEPTH_TEST);
+	glLineWidth(_width / 800.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Window::Show(const Renderer& renderer) {
@@ -117,12 +120,9 @@ Window::__GLFW::__GLFW() {
 	if (!glfwInit()) {
 		throw showerror("Failed to initialize GLFW.");
 	}
-
-	std::clog << "glfwInit()" << std::endl;
 }
 
 Window::__GLFW::~__GLFW() {
 	// terminate GLFW
-	std::clog << "glfwTerminate()" << std::endl;
 	glfwTerminate();
 }

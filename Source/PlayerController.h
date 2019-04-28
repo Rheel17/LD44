@@ -15,7 +15,10 @@ public:
 	PlayerController(Player &player);
 
 	void OnKey(int key, int scancode, int action, int mods);
+	void OnMouseMove(float x, float y);
+	void OnMouseButton(int button, int action, int mods);
 
+	void UpdateController(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams);
 	void UpdatePlayer(float dt);
 
 private:
@@ -30,6 +33,10 @@ private:
 
 	Player &_player;
 	std::set<int> _pressed_keys;
+
+	glm::vec2 _mouse_position;
+	glm::ivec2 _screen_dimensions;
+	glm::vec3 _camera_params;
 
 	static constexpr float _grounded_timer_value = 0.25f;
 	float _grounded_timer = 0;

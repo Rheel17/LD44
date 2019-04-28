@@ -16,7 +16,7 @@ Game::Game() :
 }
 
 void Game::RenderGame(float dt) {
-	UpdateGame();
+	UpdateGame(dt);
 
 	switch (_state) {
 		case CREATING_LEVEL:
@@ -27,34 +27,45 @@ void Game::RenderGame(float dt) {
 	}
 }
 
-void Game::UpdateGame() {
+void Game::UpdateGame(float dt) {
 	switch (_state) {
 		case CREATING_LEVEL:
 			_current_level = Level::GenerateLevel();
-			std::clog << "Level generated" << std::endl;
 			_sound_manager.PlayBackground();
 			_state = PLAYING;
 			break;
 		case PLAYING:
-			_current_level.Update();
+			_current_level.Update(dt);
 			break;
 	}
 }
 
 void Game::OnMouseMove(float x, float y) {
-
+	switch (_state) {
+		case PLAYING:
+			_current_level.OnMouseMove(x, y);
+			break;
+		default:
+			break;
+	}
 }
 
 void Game::OnMouseButton(int button, int action, int mods) {
-
+	switch (_state) {
+		case PLAYING:
+			_current_level.OnMouseButton(button, action, mods);
+			break;
+		default:
+			break;
+	}
 }
 
 void Game::OnKey(int key, int scancode, int action, int mods) {
 	switch (_state) {
-		case CREATING_LEVEL:
-			break;
 		case PLAYING:
 			_current_level.OnKey(key, scancode, action, mods);
+			break;
+		default:
 			break;
 	}
 }

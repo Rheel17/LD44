@@ -7,7 +7,6 @@
 #include <fstream>
 
 #include <png.h>
-#include <string_format.h>
 
 #define FLOAT(x) ((x) / 255.0f)
 #define BYTE(x) ((png_byte) ((x) * 255))
@@ -16,7 +15,6 @@ Image::Image(unsigned width, unsigned height) :
 		_width(width), _height(height) {
 
 	_pixels.resize(_width * _height);
-	std::clog << "Image(unsigned, unsigned)" << std::endl;
 }
 
 Image::Image(const std::string& filename) {
@@ -26,16 +24,10 @@ Image::Image(const std::string& filename) {
 	}
 
 	_ReadFromStream(input);
-	std::clog << "Image(const std::string&)" << std::endl;
 }
 
 Image::Image(std::istream& input) {
 	_ReadFromStream(input);
-	std::clog << "Image(std::istream&)" << std::endl;
-}
-
-Image::~Image() {
-	std::clog << "~Image()" << std::endl;
 }
 
 Image Image::SubImage(unsigned x, unsigned y, unsigned width, unsigned height) const {

@@ -14,8 +14,9 @@ public:
 	~Shooter() = default;
 
 	void AddShootingDirection(int dx, int dy);
+	void SetNextAsDiamond();
 
-	void Render(const glm::ivec2& screenDimensions) const;
+	void Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const;
 
 protected:
 	void InternalUpdate(float dt, Level& level);
@@ -26,6 +27,7 @@ private:
 	std::vector<glm::ivec2> _shooting_directions;
 	const float _shoot_time;
 	float _current_time = 0.0f;
+	bool _next_diamond = false;
 
 	mutable GLhandle _vao;
 	mutable GLhandle _vbo;

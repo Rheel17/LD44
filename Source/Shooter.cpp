@@ -18,10 +18,14 @@ void Shooter::AddShootingDirection(int dx, int dy) {
 	_shooting_directions.push_back({ dx, dy });
 }
 
-void Shooter::Render(const glm::ivec2& screenDimensions) const {
+void Shooter::SetNextAsDiamond() {
+	_next_diamond = true;
+}
+
+void Shooter::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const {
 	_PrepareRenderer();
 
-	Wall::Render(screenDimensions);
+	Wall::Render(screenDimensions, cameraParams);
 	_line_shader["color"] = glm::vec4 {
 		1.0f,
 		1.0f - _current_time / _shoot_time,
@@ -37,14 +41,31 @@ void Shooter::Render(const glm::ivec2& screenDimensions) const {
 void Shooter::InternalUpdate(float dt, Level& level) {
 	_current_time += dt;
 
+	std::normal_distribution<float> dist(0.0f, 2.0f);
+
 	if (_current_time > _shoot_time) {
 		_current_time = 0;
 
+		int diamondIndex = -1;
+		if (_next_diamond) {
+			diamondIndex = std::uniform_int_distribution<int>(0, _shooting_directions.size() - 1)(level.RNG());
+			_next_diamond = false;
+		}
+
+		int idx = 0;
 		for (const auto& direction : _shooting_directions) {
-			level.SpawnBlockBullet(_x + direction.x,
-					_y + direction.y,
-					float(direction.x) * 8,
-					float(direction.y) * 8);
+			if (diamondIndex == idx) {
+				level.SpawnDiamond(_x + direction.x,
+						_y + direction.y,
+						float(direction.x) * 2.0f + direction.y * dist(level.RNG()),
+						float(direction.y) * 2.0f + direction.x * dist(level.RNG()));
+			} else {
+				level.SpawnBlockBullet(_x + direction.x,
+						_y + direction.y,
+						float(direction.x) * 2.0f + direction.y * dist(level.RNG()),
+						float(direction.y) * 2.0f + direction.x * dist(level.RNG()));
+			}
+			idx++;
 		}
 	}
 }
@@ -71,12 +92,12 @@ void Shooter::_PrepareRenderer() const {
 					0.05f, 0.20f, 0.40f, 0.50f,
 					0.40f, 0.50f, 0.05f, 0.80f
 			};
-		} else if (direction == glm::ivec2 { 0, 1 }) {
+		} else if (direction == glm::ivec2 { 0, -1 }) {
 			add = {
 					0.20f, 0.95f, 0.50f, 0.60f,
 					0.50f, 0.60f, 0.80f, 0.95f
 			};
-		}else if (direction == glm::ivec2 { 0, -1 }) {
+		}else if (direction == glm::ivec2 { 0, 1 }) {
 			add = {
 					0.20f, 0.05f, 0.50f, 0.40f,
 					0.50f, 0.40f, 0.80f, 0.05f

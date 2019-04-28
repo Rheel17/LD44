@@ -33,15 +33,24 @@ void Entity::Update(float dt, Level& level) {
 	_y = _b2_body->GetPosition().y;
 	_rotation = _b2_body->GetAngle();
 
+	for (auto f : _on_update) {
+		f(*this, level);
+	}
+	_on_update.clear();
+
 	InternalUpdate(dt, level);
 }
 
-float Entity::X() {
+float& Entity::X() {
 	return _x;
 }
 
-float Entity::Y() {
+float& Entity::Y() {
 	return _y;
+}
+
+const b2Body *Entity::Body() {
+	return _b2_body.get();
 }
 
 void Entity::Die() {

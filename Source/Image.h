@@ -38,7 +38,6 @@ public:
 	Image(unsigned width, unsigned height);
 	Image(const std::string& filename);
 	Image(std::istream& input);
-	~Image();
 
 	inline const PixelColor& At(unsigned x, unsigned y) const { return _pixels[x + _width * y]; }
 	inline       PixelColor& At(unsigned x, unsigned y)       { return _pixels[x + _width * y]; }

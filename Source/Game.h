@@ -20,7 +20,7 @@ public:
 	Game();
 
 	void RenderGame(float dt);
-	void UpdateGame();
+	void UpdateGame(float dt);
 
 	void OnMouseMove(float x, float y);
 	void OnMouseButton(int button, int action, int mods);

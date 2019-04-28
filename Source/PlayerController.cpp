@@ -8,6 +8,8 @@
 
 #include <cmath>
 
+#include "Level.h"
+
 PlayerController::PlayerController(Player &player) :
 		_player(player) {}
 
@@ -17,6 +19,48 @@ void PlayerController::OnKey(int key, int scancode, int action, int mods) {
 	} else if (action == GLFW_RELEASE) {
 		_pressed_keys.erase(key);
 	}
+}
+
+void PlayerController::OnMouseMove(float x, float y) {
+	_mouse_position = { x, y };
+}
+
+void PlayerController::OnMouseButton(int button, int action, int mods) {
+	if (_player._bullet_count == 0 || !(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)) {
+		return;
+	}
+
+	glm::vec2 pos = _mouse_position;
+
+	// to ndc
+	pos /= _screen_dimensions;
+	pos *= 2;
+	pos -= 1;
+
+	// reverse camera transformation
+	pos.y *= float(_screen_dimensions.y) / float(_screen_dimensions.x);
+	pos *= 12.0f;
+	pos.x += _camera_params.x - 0.5f;
+	pos.y += _camera_params.y;
+
+	bool exploding = abs(_player._b2_body->GetAngularVelocity()) > 15;
+
+	// spawn the bullet on next update
+	_player._on_update.push_back([pos, exploding](Entity& e, Level& l) {
+		glm::vec2 direction = pos;
+		direction.x -= e.X();
+		direction.y -= e.Y() - 0.5f;
+		direction /= sqrt(direction.x * direction.x + direction.y * direction.y);
+
+		l.SpawnPlayerBullet(e.X() + direction.x * 0.8f, e.Y() + direction.y * 0.8f, direction.x * 10.0f, direction.y * 10.0f, exploding);
+	});
+
+	_player._bullet_count--;
+}
+
+void PlayerController::UpdateController(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) {
+	_screen_dimensions = screenDimensions;
+	_camera_params = cameraParams;
 }
 
 void PlayerController::UpdatePlayer(float dt) {

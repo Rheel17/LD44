@@ -4,38 +4,61 @@
 
 #include "Player.h"
 
+#include <cmath>
+
 #include "Bullet.h"
+#include "Diamond.h"
+#include "Level.h"
 
 Player::Player(float x, float y) :
-		Entity(x, y, 0.0f) {}
+		Entity(x, y, 0.0f),
+		_display_bullet(std::make_shared<Bullet>(0, 0, 0, 0, glm::vec4 { 1.0f, 1.0f, 0.0f, 1.0f }, 0.5f, false, false)) {}
 
-void Player::Render(const glm::ivec2& screenDimensions) const {
+void Player::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraParams) const {
 	_PrepareRenderer();
 
 	_line_shader.Use();
 	_line_shader["screenDimensions"] = (glm::vec2) screenDimensions;
-	_line_shader["location"] = glm::vec2 { _x, _y };
+	_line_shader["location"] = glm::vec2 { _x, _y - 0.07f };
 	_line_shader["color"] = glm::vec4 { 1.0f, 0.0f, 1.0f, 1.0f };
 	_line_shader["rotation"] = _rotation;
 	_line_shader["rotationCenter"] = glm::vec2 { 0.50f, 0.43f };
+	_line_shader["cameraParams"] = cameraParams;
 
 	glBindVertexArray(_vao);
 	glDrawArrays(GL_LINE_STRIP, 0, _count);
 	glBindVertexArray(0);
+
+	// render the bullets
+	float rotation = _rotation;
+	for (unsigned i = 0; i < _bullet_count; i++) {
+		_display_bullet->X() = _x + 0.25f * cos(rotation);
+		_display_bullet->Y() = _y + 0.25f * sin(rotation);
+		_display_bullet->Render(screenDimensions, cameraParams);
+
+		rotation += M_PI / 3.0f;
+	}
 }
 
-void Player::OnCollisionStart(Entity *other) {
+void Player::OnCollisionStart(Entity *other, b2Contact *contact) {
 	Wall *wall = dynamic_cast<Wall *>(other);
 	Bullet *bullet = dynamic_cast<Bullet *>(other);
+	Diamond *diamond = dynamic_cast<Diamond *>(other);
 
 	if (wall) {
 		_touching_walls.insert(wall);
 	} else if (bullet) {
-		_bullets++;
+		_bullet_count++;
+
+		_on_update.push_back([wall](Entity &p, Level &l) {
+			l.ShakeScreen(50.0f, 0.1f);
+		});
+	} else if (diamond) {
+		diamond->Die();
 	}
 }
 
-void Player::OnCollisionEnd(Entity *other) {
+void Player::OnCollisionEnd(Entity *other, b2Contact *contact) {
 	Wall *wall = dynamic_cast<Wall *>(other);
 
 	if (wall) {
@@ -46,7 +69,7 @@ void Player::OnCollisionEnd(Entity *other) {
 bool Player::IsGrouded() const {
 	for (Wall *wall : _touching_walls) {
 		if (_y <= wall->Y() + 0.42f &&
-				_x - 0.35f <= wall->X() && wall->X() <= _x + 0.35f) {
+				_x - 0.5f <= wall->X() && wall->X() <= _x + 0.5f) {
 			return true;
 		}
 	}

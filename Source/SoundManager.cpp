@@ -9,7 +9,6 @@
 SoundManager::SoundManager() {
 	_device = std::shared_ptr<ALCdevice>(alcOpenDevice(nullptr), [](ALCdevice *device) {
 		alcCloseDevice(device);
-		std::clog << "Audio device closed" << std::endl;
 	});
 
 	if (!_device) {
@@ -17,15 +16,12 @@ SoundManager::SoundManager() {
 	}
 
 	_valid = true;
-	std::clog << "Audio device opened" << std::endl;
 
 	_context = std::shared_ptr<ALCcontext>(alcCreateContext(_device.get(), nullptr), [](ALCcontext *context) {
 		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(context);
-		std::clog << "Audio context destroyed" << std::endl;
 	});
 
-	std::clog << "Audio context created" << std::endl;
 	alcMakeContextCurrent(_context.get());
 
 	// create the background source
@@ -44,8 +40,6 @@ void SoundManager::PlayBackground() {
 	if (!_valid) {
 		return;
 	}
-
-	std::cout << "play background" << std::endl;
 
 	alSourcei(_background_source, AL_LOOPING, 1);
 	alSourcei(_background_source, AL_BUFFER, _sounds[BACKGROUND]);
