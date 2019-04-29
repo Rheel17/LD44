@@ -50,7 +50,10 @@ void Player::OnCollisionStart(Entity *other, b2Contact *contact) {
 		_touching_walls.insert(wall);
 	} else if (bullet) {
 		_bullet_count++;
-		_hp--;
+
+		if (_hp >= 1) {
+			_hp--;
+		}
 
 		_on_update.push_back([wall](Entity &p, Level &l) {
 			l.ShakeScreen(50.0f, 0.1f);

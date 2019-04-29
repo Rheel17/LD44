@@ -57,8 +57,8 @@ void Shooter::InternalUpdate(float dt, Level& level) {
 			if (diamondIndex == idx) {
 				level.SpawnDiamond(_x + direction.x,
 						_y + direction.y,
-						float(direction.x) * 2.0f + direction.y * dist(level.RNG()),
-						float(direction.y) * 2.0f + direction.x * dist(level.RNG()));
+						float(direction.x) * 0.5f + direction.y * dist(level.RNG()),
+						float(direction.y) * 0.5f + direction.x * dist(level.RNG()));
 			} else {
 				level.SpawnBlockBullet(_x + direction.x,
 						_y + direction.y,

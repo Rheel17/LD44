@@ -32,7 +32,7 @@ protected:
 	void _CreateFixture(std::shared_ptr<b2Body> body) const;
 
 public:
-	static constexpr unsigned max_hp = 40;
+	static constexpr unsigned max_hp = 20;
 
 private:
 	void _PrepareRenderer() const;
