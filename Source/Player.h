@@ -24,9 +24,15 @@ public:
 	void OnCollisionEnd(Entity *other, b2Contact *contact);
 	bool IsGrouded() const;
 
+	unsigned Score() const;
+	unsigned Health() const;
+
 protected:
 	b2BodyDef _CreateBody() const;
 	void _CreateFixture(std::shared_ptr<b2Body> body) const;
+
+public:
+	static constexpr unsigned max_hp = 10;
 
 private:
 	void _PrepareRenderer() const;
@@ -39,6 +45,10 @@ private:
 	std::set<Wall *> _touching_walls;
 	std::shared_ptr<Bullet> _display_bullet;
 	unsigned _bullet_count = 0;
+
+	unsigned _score = 0;
+
+	unsigned _hp = max_hp;
 
 };
 

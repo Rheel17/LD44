@@ -20,6 +20,7 @@ void Diamond::Render(const glm::ivec2& screenDimensions, const glm::vec3& camera
 	_line_shader["rotation"] = (float) (_rotation + M_PI / 4);
 	_line_shader["rotationCenter"] = glm::vec2 { 0.15f, 0.15f };
 	_line_shader["cameraParams"] = cameraParams;
+	_line_shader["scale"] = 1.0f;
 
 	glBindVertexArray(_vao);
 	glDrawArrays(GL_LINE_LOOP, 0, _count);

@@ -27,6 +27,7 @@ void Wall::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraPar
 	_line_shader["color"] = glm::vec4 { 1.0f, 1.0f, 1.0f, 1.0f };
 	_line_shader["rotation"] = _rotation;
 	_line_shader["cameraParams"] = cameraParams;
+	_line_shader["scale"] = 1.0f;
 
 	glBindVertexArray(_vao);
 	glDrawArrays(GL_LINE_LOOP, 0, 8);

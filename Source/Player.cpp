@@ -24,6 +24,7 @@ void Player::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraP
 	_line_shader["rotation"] = _rotation;
 	_line_shader["rotationCenter"] = glm::vec2 { 0.50f, 0.43f };
 	_line_shader["cameraParams"] = cameraParams;
+	_line_shader["scale"] = 1.0f;
 
 	glBindVertexArray(_vao);
 	glDrawArrays(GL_LINE_STRIP, 0, _count);
@@ -32,8 +33,8 @@ void Player::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraP
 	// render the bullets
 	float rotation = _rotation;
 	for (unsigned i = 0; i < _bullet_count; i++) {
-		_display_bullet->X() = _x + 0.25f * cos(rotation);
-		_display_bullet->Y() = _y + 0.25f * sin(rotation);
+		_display_bullet->X() = _x + 0.25f * cos(rotation) + 0.25f;
+		_display_bullet->Y() = _y + 0.25f * sin(rotation) - 0.25f;
 		_display_bullet->Render(screenDimensions, cameraParams);
 
 		rotation += M_PI / 3.0f;
@@ -49,12 +50,20 @@ void Player::OnCollisionStart(Entity *other, b2Contact *contact) {
 		_touching_walls.insert(wall);
 	} else if (bullet) {
 		_bullet_count++;
+		_hp--;
 
 		_on_update.push_back([wall](Entity &p, Level &l) {
 			l.ShakeScreen(50.0f, 0.1f);
 		});
 	} else if (diamond) {
 		diamond->Die();
+
+		_score++;
+		_hp = max_hp;
+	}
+
+	if (_hp == 0 || _bullet_count > 6) {
+		Die();
 	}
 }
 
@@ -75,6 +84,14 @@ bool Player::IsGrouded() const {
 	}
 
 	return false;
+}
+
+unsigned Player::Score() const {
+	return _score;
+}
+
+unsigned Player::Health() const {
+	return _hp;
 }
 
 b2BodyDef Player::_CreateBody() const {

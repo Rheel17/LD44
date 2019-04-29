@@ -29,6 +29,7 @@ public:
 	SoundManager& operator=(SoundManager&&) = delete;
 
 	void PlayBackground();
+	void StopBackground();
 
 private:
 	void _LoadSounds();

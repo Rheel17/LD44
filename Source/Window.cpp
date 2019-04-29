@@ -34,6 +34,8 @@ Window::Window(EventListener *eventListener) :
 	_height = vidmode->height * 0.75f;
 
 	// set the window hints
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_SAMPLES, 9);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 

@@ -10,6 +10,11 @@
 #include "Level.h"
 #include "Wall.h"
 
+GLhandle Bullet::_vao;
+GLhandle Bullet::_vbo;
+unsigned Bullet::_count;
+bool Bullet::_is_renderer_prepared = false;
+
 Bullet::Bullet(float x, float y, float vx, float vy, const glm::vec4& color, float scale, bool following, bool exploding) :
 		Entity(x, y, 0.0f),
 		_start_vx(vx), _start_vy(vy), _color(color), _scale(scale), _following(following), _exploding(exploding) {}
@@ -24,6 +29,7 @@ void Bullet::Render(const glm::ivec2& screenDimensions, const glm::vec3& cameraP
 	_line_shader["rotation"] = _rotation;
 	_line_shader["rotationCenter"] = glm::vec2 { 0.5f, 0.5f };
 	_line_shader["cameraParams"] = cameraParams;
+	_line_shader["scale"] = _scale;
 
 	glBindVertexArray(_vao);
 	glDrawArrays(GL_LINE_LOOP, 0, _count);
@@ -92,7 +98,7 @@ void Bullet::_CreateFixture(std::shared_ptr<b2Body> body) const {
 	fixture->SetRestitution(1.0f);
 }
 
-void Bullet::_PrepareRenderer() const {
+void Bullet::_PrepareRenderer() {
 	_PrepareShader();
 
 	if (_is_renderer_prepared) {
@@ -103,8 +109,8 @@ void Bullet::_PrepareRenderer() const {
 	std::vector<GLfloat> data;
 
 	for (float f = 0; f <= 2 * M_PI; f += 0.2f) {
-		data.push_back(0.5f + cos(f) * 0.15f * _scale);
-		data.push_back(0.5f + sin(f) * 0.15f * _scale);
+		data.push_back(0.5f + cos(f) * 0.15f);
+		data.push_back(0.5f + sin(f) * 0.15f);
 	}
 
 	_count = data.size() / 2;

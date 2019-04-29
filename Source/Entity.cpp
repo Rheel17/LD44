@@ -66,8 +66,6 @@ void Entity::_PrepareShader() {
 		return;
 	}
 
-	std::clog << "_PrepareShader()" << std::endl;
-
 	_line_shader.AddShaderFromFile(GL_VERTEX_SHADER, "Resources/shader.vert.glsl");
 	_line_shader.AddShaderFromFile(GL_FRAGMENT_SHADER, "Resources/shader.frag.glsl");
 	_line_shader.Link();

@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <iostream>
 
-#include <glm/matrix.hpp>
+#include <glm/glm.hpp>
 
 class ShaderProgramBindings {
 	friend class Uniform;

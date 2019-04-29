@@ -46,6 +46,14 @@ void SoundManager::PlayBackground() {
 	alSourcePlay(_background_source);
 }
 
+void SoundManager::StopBackground() {
+	if (!_valid) {
+		return;
+	}
+
+	alSourceStop(_background_source);
+}
+
 void SoundManager::_LoadSounds() {
 	_LoadSound("resources/background.wav", BACKGROUND);
 }

@@ -23,6 +23,7 @@ void Game::RenderGame(float dt) {
 			break;
 		case PLAYING:
 			_current_level.Render(dt, { _window.Width(), _window.Height() });
+			_overlay->Render({ _window.Width(), _window.Height() });
 			break;
 	}
 }
@@ -32,6 +33,7 @@ void Game::UpdateGame(float dt) {
 		case CREATING_LEVEL:
 			_current_level = Level::GenerateLevel();
 			_sound_manager.PlayBackground();
+			_overlay = std::make_shared<Overlay>(_current_level);
 			_state = PLAYING;
 			break;
 		case PLAYING:

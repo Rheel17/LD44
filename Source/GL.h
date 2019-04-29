@@ -18,16 +18,24 @@ class GLhandle {
 	typedef std::function<void(GLsizei, GLuint *)> _Generator;
 	typedef std::function<void(GLsizei, GLuint *)> _Deleter;
 
-	GLhandle(_Generator generator, _Deleter deleter) :
+	GLhandle(_Generator generator, _Deleter deleter, bool debug) :
 			_valid(true) {
 
 		// create the OpenGL object
 		GLuint *id = new GLuint;
 		generator(1, id);
 
+		if (debug) {
+			std::cout << "Generated: " << *id << std::endl;
+		}
+
 		// create the handle, with a custom deleter when all instances
 		// of this object go out of scope
-		_handle = std::shared_ptr<GLuint>(id, [deleter](GLuint *id) {
+		_handle = std::shared_ptr<GLuint>(id, [deleter, debug](GLuint *id) {
+			if (debug) {
+				std::cout << "Deleting: " << *id << std::endl;
+			}
+
 			deleter(1, id);
 		});
 	}
@@ -62,11 +70,11 @@ private:
 	GL operator=(const GL&) = delete;
 
 public:
-	inline static GLhandle GenBuffer()       { return GLhandle(glGenBuffers,       glDeleteBuffers      ); }
-	inline static GLhandle GenFramebuffer()  { return GLhandle(glGenFramebuffers,  glDeleteFramebuffers ); }
-	inline static GLhandle GenRenderbuffer() { return GLhandle(glGenRenderbuffers, glDeleteRenderbuffers); }
-	inline static GLhandle GenTexture()      { return GLhandle(glGenTextures,      glDeleteTextures     ); }
-	inline static GLhandle GenVertexArray()  { return GLhandle(glGenVertexArrays,  glDeleteVertexArrays ); }
+	inline static GLhandle GenBuffer()       { return GLhandle(glGenBuffers,       glDeleteBuffers      , false); }
+	inline static GLhandle GenFramebuffer()  { return GLhandle(glGenFramebuffers,  glDeleteFramebuffers , false); }
+	inline static GLhandle GenRenderbuffer() { return GLhandle(glGenRenderbuffers, glDeleteRenderbuffers, false); }
+	inline static GLhandle GenTexture()      { return GLhandle(glGenTextures,      glDeleteTextures     , false); }
+	inline static GLhandle GenVertexArray()  { return GLhandle(glGenVertexArrays,  glDeleteVertexArrays , false); }
 
 	inline static GLhandle CreateProgram() {
 		return GLhandle([](GLsizei count, GLuint *ids) {
@@ -77,7 +85,7 @@ public:
 			for (GLsizei i = 0; i < count; i++) {
 				glDeleteProgram(ids[i]);
 			}
-		});
+		}, false);
 	}
 
 private:

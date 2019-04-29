@@ -8,6 +8,7 @@ uniform vec2 location;
 uniform float rotation;
 uniform vec2 rotationCenter;
 uniform vec3 cameraParams;
+uniform float scale;
 
 void main(void) {
 	// set the position	
@@ -21,6 +22,7 @@ void main(void) {
 	}
 	
 	// scale correctly
+	gl_Position.xy *= scale;
 	gl_Position.xy /= 12.0;
 	
 	// move according to the position in the level

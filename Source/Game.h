@@ -5,8 +5,8 @@
 #ifndef GAME_H_
 #define GAME_H_
 
-#include "Level.h"
 #include "SoundManager.h"
+#include "Overlay.h"
 #include "Window.h"
 
 class Game : public Window::EventListener {
@@ -33,6 +33,7 @@ private:
 
 	State _state;
 	Level _current_level;
+	std::shared_ptr<Overlay> _overlay;
 
 };
 
