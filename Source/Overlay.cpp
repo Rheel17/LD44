@@ -29,6 +29,12 @@ void Overlay::Render(const glm::ivec2& screenDimensions) {
 	_SetColor({ 0.8f, 0.8f, 0.8f, 0.2f });
 	_DrawQuad(1.0f, 0.05f, 0.5f, 0.1f);
 
-	_SetColor({ 1.0f, 0.05f, 1.0f, 1.0f });
+	_SetColor({ 1.0f, 0.0f, 1.0f, 1.0f });
 	_DrawQuad(1.01f, 0.06f, (_level.GetPlayer().Health() / float(Player::max_hp)) * 0.48f, 0.08f);
+
+	if (_level.IsGameOver()) {
+		_SetColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+		_DrawText("go", 1.6f, 0.08f, 0.08f);
+		_DrawText("press", 2.4f, 0.08f, 0.06f);
+	}
 }

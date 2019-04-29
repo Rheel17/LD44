@@ -5,7 +5,6 @@
 #include "Level.h"
 
 #include <algorithm>
-#include <iostream>
 
 #include "Bullet.h"
 #include "Diamond.h"
@@ -94,7 +93,11 @@ void Level::ExplodeAt(float x, float y) {
 	}
 }
 
-void Level::Update(float dt) {
+bool Level::Update(float dt) {
+	if (_is_game_over) {
+		return false;
+	}
+
 	_time += dt;
 
 	if (_player_controller) {
@@ -136,7 +139,13 @@ void Level::Update(float dt) {
 			_diamond = nullptr;
 			_has_diamond = false;
 		}
+
+		if (dead == _player) {
+			_is_game_over = true;
+		}
 	}
+
+	return !_is_game_over;
 }
 
 void Level::Render(float dt, const glm::ivec2& screenDimensions) {
@@ -171,6 +180,10 @@ void Level::Render(float dt, const glm::ivec2& screenDimensions) {
 		if (entity->IsAlive()) {
 			entity->Render(screenDimensions, cameraParams);
 		}
+	}
+
+	if (!_player->IsAlive()) {
+		_player->Render(screenDimensions, cameraParams);
 	}
 
 	// update the player controller
@@ -236,6 +249,10 @@ Player& Level::GetPlayer() {
 
 std::mt19937_64& Level::RNG() {
 	return _rng;
+}
+
+bool Level::IsGameOver() {
+	return _is_game_over;
 }
 
 Level Level::GenerateLevel() {

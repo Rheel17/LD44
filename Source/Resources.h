@@ -29,6 +29,9 @@ public:
 	static const Image font7;
 	static const Image font8;
 	static const Image font9;
+	static const Image fontgo;
+	static const Image fontpress;
+	static const Image fontmain;
 
 };
 

@@ -32,7 +32,7 @@ public:
 	void ShakeScreen(const glm::vec2& direction, float power, float amplitude);
 	void ExplodeAt(float x, float y);
 
-	void Update(float dt);
+	bool Update(float dt);
 	void Render(float dt, const glm::ivec2& screenDimensions);
 
 	void OnKey(int key, int scancode, int action, int mods);
@@ -44,6 +44,7 @@ public:
 
 	Player& GetPlayer();
 	std::mt19937_64& RNG();
+	bool IsGameOver();
 
 private:
 	template<typename T, typename ... Args>
@@ -73,6 +74,7 @@ private:
 	std::unordered_set<std::shared_ptr<ScreenShaker>> _screen_shakers;
 
 	float _time = 0.0f;
+	bool _is_game_over = false;
 
 public:
 	static Level GenerateLevel();

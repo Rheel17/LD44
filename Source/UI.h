@@ -44,6 +44,9 @@ private:
 	static ShaderProgram _shader;
 
 	static std::vector<GLhandle> _font;
+	static GLhandle _fontgo;
+	static GLhandle _fontpress;
+	static GLhandle _fontmain;
 
 	static bool _is_renderer_prepared;
 

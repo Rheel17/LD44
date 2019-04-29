@@ -4,8 +4,6 @@
 
 #include "Entity.h"
 
-#include <iostream>
-
 ShaderProgram Entity::_line_shader;
 bool Entity::_is_shader_prepared(false);
 

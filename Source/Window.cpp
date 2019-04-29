@@ -7,8 +7,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <iostream>
-
 #include "Error.h"
 
 Window::__GLFW Window::_glfw;
@@ -40,7 +38,7 @@ Window::Window(EventListener *eventListener) :
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	// create the window
-	GLFWwindow *window = glfwCreateWindow(_width, _height, "Ludum Dare 44", nullptr, nullptr);
+	GLFWwindow *window = glfwCreateWindow(_width, _height, "Stargem", nullptr, nullptr);
 	if (!window) {
 		throw showerror("Could not create window.");
 	}

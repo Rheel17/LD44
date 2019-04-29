@@ -12,6 +12,9 @@ GLhandle UI::_line_vao;
 GLhandle UI::_line_vbo;
 ShaderProgram UI::_shader;
 std::vector<GLhandle> UI::_font;
+GLhandle UI::_fontgo;
+GLhandle UI::_fontpress;
+GLhandle UI::_fontmain;
 bool UI::_is_renderer_prepared = false;
 
 void UI::_InitializeScreenDimensions(const glm::ivec2& screenDimensions) {
@@ -53,6 +56,44 @@ void UI::_DrawLine(float x1, float y1, float x2, float y2) {
 }
 
 void UI::_DrawText(const std::string& text, float x, float y, float height) {
+	if (text == std::string("main")) {
+		_shader.Use();
+		_shader["hasTexture"] = (GLint) 1;
+
+		glBindTexture(GL_TEXTURE_2D, (GLuint) _fontmain);
+
+		_DrawQuad(x, y, height, height);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		_shader["hasTexture"] = (GLint) 0;
+		return;
+	} else if (text == std::string("go")) {
+		_shader.Use();
+		_shader["hasTexture"] = (GLint) 1;
+
+		glBindTexture(GL_TEXTURE_2D, (GLuint) _fontgo);
+
+		_DrawQuad(x, y, height * 6.16f, height);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		_shader["hasTexture"] = (GLint) 0;
+		return;
+	} else if (text == std::string("press")) {
+		_shader.Use();
+		_shader["hasTexture"] = (GLint) 1;
+
+		glBindTexture(GL_TEXTURE_2D, (GLuint) _fontpress);
+
+		_DrawQuad(x, y, height * 10.63f, height);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		_shader["hasTexture"] = (GLint) 0;
+		return;
+	}
+
 	_shader.Use();
 	_shader["hasTexture"] = (GLint) 1;
 
@@ -145,6 +186,9 @@ void UI::_PrepareTextures() {
 	_font.push_back(_GetTexture(Resources::font7));
 	_font.push_back(_GetTexture(Resources::font8));
 	_font.push_back(_GetTexture(Resources::font9));
+	_fontgo = _GetTexture(Resources::fontgo);
+	_fontpress = _GetTexture(Resources::fontpress);
+	_fontmain = _GetTexture(Resources::fontmain);
 }
 
 GLhandle UI::_GetTexture(const Image& image) {

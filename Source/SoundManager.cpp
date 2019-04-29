@@ -4,8 +4,6 @@
 
 #include "SoundManager.h"
 
-#include <iostream>
-
 SoundManager::SoundManager() {
 	_device = std::shared_ptr<ALCdevice>(alcOpenDevice(nullptr), [](ALCdevice *device) {
 		alcCloseDevice(device);

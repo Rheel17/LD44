@@ -16,3 +16,6 @@ const Image Resources::font6("Resources/font6.png");
 const Image Resources::font7("Resources/font7.png");
 const Image Resources::font8("Resources/font8.png");
 const Image Resources::font9("Resources/font9.png");
+const Image Resources::fontgo("Resources/fontgo.png");
+const Image Resources::fontpress("Resources/fontpress.png");
+const Image Resources::fontmain("Resources/fontmain.png");
